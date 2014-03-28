@@ -72,6 +72,11 @@ describe 'The server' do
 
         expect(last_response.status).to eq 403
       end
+
+      it 'DELETE /tokens with an invalid token throws an error' do
+        delete '/tokens', 'token' => 'nosuchtoken'
+        expect(last_response.status).to eq 404
+      end
     end
   end
 end

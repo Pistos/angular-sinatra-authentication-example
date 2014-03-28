@@ -41,6 +41,6 @@ delete '/tokens' do
 
     200
   else
-    403
+    404
   end
 end
