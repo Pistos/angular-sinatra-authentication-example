@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe 'The server' do
-  context 'when not logged in' do
+  context 'without providing a token' do
     it '/auth-not-required returns data' do
       get '/auth-not-required'
 
@@ -46,7 +46,7 @@ describe 'The server' do
       end
     end
 
-    context 'when logged in' do
+    context 'when providing a legit token' do
       before do
         post '/tokens', 'username' => 'joe', 'password' => 'mysecret'
         @token = last_response_data['token']
@@ -72,11 +72,11 @@ describe 'The server' do
 
         expect(last_response.status).to eq 403
       end
+    end
 
-      it 'DELETE /tokens with an invalid token throws an error' do
-        delete '/tokens', 'token' => 'nosuchtoken'
-        expect(last_response.status).to eq 404
-      end
+    it 'DELETE /tokens with an invalid token throws an error' do
+      delete '/tokens', 'token' => 'nosuchtoken'
+      expect(last_response.status).to eq 404
     end
   end
 end
