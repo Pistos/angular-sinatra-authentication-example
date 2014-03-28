@@ -1,0 +1,3 @@
+#!/bin/sh
+createuser -U postgres angular_sinatra
+createdb -U postgres -O angular_sinatra angular_sinatra

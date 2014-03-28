@@ -1,0 +1,6 @@
+engine: 'postgres'
+host: 'localhost'
+# port: 5678
+database: 'angular_sinatra'
+user: 'angular_sinatra'
+# password: 'angular_sinatra'
