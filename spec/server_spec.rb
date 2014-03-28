@@ -39,7 +39,7 @@ describe 'The server' do
       end
 
       it 'with bad credentials does not provide a token' do
-        post '/tokens', 'username' => 'plato', 'password' => 'badguess'
+        post '/tokens', 'username' => 'joe', 'password' => 'badguess'
 
         expect(last_response.status).not_to eq 200
         expect(last_response.status).to eq 401
