@@ -5,6 +5,7 @@ Sequel.migration do
       String :username, null: false
       String :password_encrypted, null: false
       String :token
+      Integer :access, null: false, default: 1
     end
   end
 

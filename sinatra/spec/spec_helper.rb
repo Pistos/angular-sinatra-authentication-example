@@ -13,5 +13,9 @@ def app
 end
 
 def last_response_data
-  JSON.parse(last_response.body)
+  begin
+    JSON.parse(last_response.body)
+  rescue JSON::ParserError => e
+    {}
+  end
 end

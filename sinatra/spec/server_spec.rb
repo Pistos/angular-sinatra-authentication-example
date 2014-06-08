@@ -18,34 +18,34 @@ describe 'The server' do
 
   context 'given an existing User record' do
     before do
-      @user = FactoryGirl.build(:user, username: 'joe')
+      @user = FactoryGirl.build(:user, username: 'joe', access: 3)
       @user.password = 'mysecret'
       @user.save
     end
 
     describe 'POST /tokens' do
       it 'with legit credentials provides a token' do
-        post '/tokens', 'username' => 'joe', 'password' => 'mysecret'
+        post '/tokens', { 'username' => 'joe', 'password' => 'mysecret' }
 
         expect(last_response.status).to eq 200
         expect(last_response_data['token']).to match /^[a-f0-9]{32}$/
       end
 
       it 'with legit credentials more than once provides a different token each time' do
-        post '/tokens', 'username' => 'joe', 'password' => 'mysecret'
+        post '/tokens', { 'username' => 'joe', 'password' => 'mysecret' }
         token1 = last_response_data['token']
-        post '/tokens', 'username' => 'joe', 'password' => 'mysecret'
+        post '/tokens', { 'username' => 'joe', 'password' => 'mysecret' }
         expect(last_response_data['token']).not_to eq token1
       end
 
       it 'with bad credentials does not provide a token' do
-        post '/tokens', 'username' => 'joe', 'password' => 'badguess'
+        post '/tokens', { 'username' => 'joe', 'password' => 'badguess' }
 
         expect(last_response.status).to eq 401
       end
 
       it 'with a username that does not exist does not provide a token' do
-        post '/tokens', 'username' => 'nosuchusername', 'password' => 'something'
+        post '/tokens', { 'username' => 'nosuchusername', 'password' => 'something' }
 
         expect(last_response.status).to eq 404
       end
@@ -53,29 +53,39 @@ describe 'The server' do
 
     context 'when providing a legit token' do
       before do
-        post '/tokens', 'username' => 'joe', 'password' => 'mysecret'
+        post '/tokens', { 'username' => 'joe', 'password' => 'mysecret' }
         @token = last_response_data['token']
       end
 
       it 'GET /auth-not-required returns data' do
-        get '/auth-not-required', 'token' => @token
+        get '/auth-not-required', { token: @token }
 
         expect(last_response.status).to eq 200
-        expect(last_response_data).to eq( { 'some-key' => 'some-value' } )
+        expect(last_response_data).to eq( {'some-key' => 'some-value'} )
       end
 
       it 'GET /auth-required returns data' do
-        get '/auth-required', 'token' => @token
+        get "/auth-required?token=#{@token}"
 
         expect(last_response.status).to eq 200
-        expect(last_response_data).to eq( { 'some-private-key' => 'some-private-value' } )
+        expect(last_response_data).to eq( {'some-private-key' => 'some-private-value'} )
       end
 
       it 'DELETE /tokens invalidates tokens' do
         delete '/tokens', 'token' => @token
-        get '/auth-required', 'token' => @token
+        get "/auth-required?token=#{@token}"
 
         expect(last_response.status).to eq 403
+      end
+
+      it 'GET /user' do
+        get "/user?token=#{@token}"
+
+        expect(last_response.status).to eq 200
+        expect(last_response_data).to eq( {
+          'username' => 'joe',
+          'access' => 3,
+        } )
       end
     end
 

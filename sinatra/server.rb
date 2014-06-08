@@ -5,7 +5,12 @@ require 'securerandom'
 require 'angular-sinatra/models'
 
 before do
-  @params = JSON.parse(request.body.read)
+  @params = request.params.dup
+  begin
+    @params.merge JSON.parse(request.body.read)
+  rescue JSON::ParserError => e
+    # no op, because sometimes JSON parameters are not sent in the body
+  end
 end
 
 set(:auth) do |_|
@@ -15,15 +20,15 @@ set(:auth) do |_|
   }
 end
 
-get '/auth-not-required' do
+get '/auth-not-required', provides: 'json' do
   { 'some-key' => 'some-value' }.to_json
 end
 
-get '/auth-required', :auth => true do
+get '/auth-required', provides: 'json', :auth => true do
   { 'some-private-key' => 'some-private-value' }.to_json
 end
 
-post '/tokens' do
+post '/tokens', provides: 'json' do
   user = AngularSinatra::Model::User[username: @params['username'].to_s]
   if user.nil?
     404
@@ -49,4 +54,14 @@ delete '/tokens' do
   else
     404
   end
+end
+
+get '/user', provides: 'json' do
+  user = AngularSinatra::Model::User[token: @params['token'].to_s]
+  return 404  if user.nil?
+
+  {
+    'username' => user.username,
+    'access' => user.access,
+  }.to_json
 end
