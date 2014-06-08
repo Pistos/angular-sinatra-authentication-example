@@ -41,8 +41,13 @@ describe 'The server' do
       it 'with bad credentials does not provide a token' do
         post '/tokens', 'username' => 'joe', 'password' => 'badguess'
 
-        expect(last_response.status).not_to eq 200
         expect(last_response.status).to eq 401
+      end
+
+      it 'with a username that does not exist does not provide a token' do
+        post '/tokens', 'username' => 'nosuchusername', 'password' => 'something'
+
+        expect(last_response.status).to eq 404
       end
     end
 

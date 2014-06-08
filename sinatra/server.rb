@@ -21,7 +21,9 @@ end
 
 post '/tokens' do
   user = AngularSinatra::Model::User[username: params['username'].to_s]
-  if user.password == params['password'].to_s
+  if user.nil?
+    404
+  elsif user.password == params['password'].to_s
     token = SecureRandom.hex(16)
     user.token = token
     user.save
