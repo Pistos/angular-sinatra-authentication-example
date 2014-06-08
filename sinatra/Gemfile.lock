@@ -9,6 +9,11 @@ GEM
       tzinfo (~> 0.3.37)
     atomic (1.1.16)
     bcrypt (3.1.7)
+    byebug (3.1.2)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
+    columnize (0.8.9)
+    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -44,6 +49,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  byebug
   factory_girl
   pg
   rack-test

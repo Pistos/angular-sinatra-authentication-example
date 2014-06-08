@@ -5,9 +5,11 @@ require 'securerandom'
 require 'angular-sinatra/models'
 
 before do
+  # This seems to get destroyed the minute we reference request.params.  No idea why.
+  original_request_body = request.body.read
   @params = request.params.dup
   begin
-    @params.merge JSON.parse(request.body.read)
+    @params.merge! JSON.parse(original_request_body)
   rescue JSON::ParserError => e
     # no op, because sometimes JSON parameters are not sent in the body
   end
