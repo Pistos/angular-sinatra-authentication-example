@@ -4,9 +4,13 @@ require 'securerandom'
 
 require 'angular-sinatra/models'
 
+before do
+  @params = JSON.parse(request.body.read)
+end
+
 set(:auth) do |_|
   condition {
-    @user = AngularSinatra::Model::User[token: params['token'].to_s]
+    @user = AngularSinatra::Model::User[token: @params['token'].to_s]
     @user or halt(403)
   }
 end
@@ -20,10 +24,10 @@ get '/auth-required', :auth => true do
 end
 
 post '/tokens' do
-  user = AngularSinatra::Model::User[username: params['username'].to_s]
+  user = AngularSinatra::Model::User[username: @params['username'].to_s]
   if user.nil?
     404
-  elsif user.password == params['password'].to_s
+  elsif user.password == @params['password'].to_s
     token = SecureRandom.hex(16)
     user.token = token
     user.save
@@ -36,7 +40,7 @@ post '/tokens' do
 end
 
 delete '/tokens' do
-  user = AngularSinatra::Model::User[token: params['token'].to_s]
+  user = AngularSinatra::Model::User[token: @params['token'].to_s]
   if user
     user.token = nil
     user.save

@@ -10,3 +10,6 @@ gem 'sinatra'
 gem 'rspec'
 gem 'rack-test'
 gem 'factory_girl'
+
+# For debugging
+# gem 'byebug'
