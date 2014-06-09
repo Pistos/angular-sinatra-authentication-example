@@ -4,7 +4,7 @@ Sequel.migration do
   up do
     self[:users].insert(
       username: 'aristotle',
-      password_encrypted: BCrypt::Password.create('aristotlepassword')
+      password_encrypted: BCrypt::Password.create('aristotlespassword')
     )
     self[:users].insert(
       username: 'plato',
