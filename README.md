@@ -3,8 +3,8 @@
 This codebase exemplifies authentication and authorization using AngularJS for
 the frontend and Sinatra as the API/backend.
 
-Authentication: Confirming that a user is who (s)he claims to be.
-Authorization: Specifying the access and visibility of resources to users.
+* Authentication: Confirming that a user is who (s)he claims to be.
+* Authorization: Specifying the access and visibility of resources to users.
 
 See this code in action at: http://asae.pist0s.ca/
 
