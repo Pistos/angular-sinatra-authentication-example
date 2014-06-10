@@ -3,7 +3,7 @@ angular.module('angularSinatra', ['ngRoute']);
 angular
 .module('angularSinatra')
 .controller('SplashController', function($scope, apiService, authService) {
-  $scope.loggedIn = !! authService.username();
+  $scope.loggedIn = authService.loggedIn();
 
   apiService.get('/data-only-users-can-see')
   .success( function(data, status) {
@@ -33,8 +33,22 @@ angular
 
 angular
 .module('angularSinatra')
-.controller('HomeController', function($scope, authService) {
+.controller('HomeController', function($scope, authService, apiService) {
   $scope.username = authService.username();
+  apiService.get('/data-only-users-can-see')
+  .success( function(data, status) {
+    $scope.data = data.data;
+  } );
+});
+
+angular
+.module('angularSinatra')
+.controller('AdminController', function($scope, authService, apiService) {
+  $scope.username = authService.username();
+  apiService.get('/data-only-admins-can-see')
+  .success( function(data, status) {
+    $scope.data = data.data;
+  } );
 });
 
 angular
@@ -66,6 +80,12 @@ angular
         templateUrl: 'home/index.html',
         controller: 'HomeController',
         access_required: 1
+      });
+    $routeProvider.when('/admin',
+      {
+        templateUrl: 'admin/index.html',
+        controller: 'AdminController',
+        access_required: 9
       });
   }]);
 
@@ -131,6 +151,9 @@ angular
     username: function() {
       return localStorage.getItem('username');
     },
+    loggedIn: function() {
+      return !! this.username();
+    },
     logOut: function() {
       apiService.delete('/tokens');
       localStorage.removeItem('username');
@@ -142,12 +165,17 @@ angular
 angular.module('angularSinatra')
 .run(['$rootScope', '$location', 'authService', function ($rootScope, $location, authService) {
 
-    $rootScope.$on("$routeChangeSuccess", function (event, current) {
-      if( authService.routeIsAccessible(current.$$route.access_required) ) {
-        $location.path(current.$$route.originalPath);
+  $rootScope.$on("$routeChangeSuccess", function (event, current, last) {
+    if( authService.routeIsAccessible(current.$$route.access_required) ) {
+      $location.path(current.$$route.originalPath);
+    } else {
+      if( authService.loggedIn() ) {
+        alert('Not authorized.');
+        $location.path(last.$$route.originalPath);
       } else {
         $location.path('/auth/login');
       }
-    });
+    }
+  });
 
 }]);
