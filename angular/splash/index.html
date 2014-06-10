@@ -6,11 +6,16 @@
   yet, it redirects to the login page.
 </div>
 
-<div>
+<div ng-if="! loggedIn">
   <a href="/#/auth/login">login</a>
   If the user was denied access to a page due to not being logged in yet,
   after successful login, the user is taken to that page automatically.
 </div>
-<div>
+<div ng-if="loggedIn">
   <a href="/#/auth/logout">logout</a>
+</div>
+
+<div>
+Data only users can see: {{user_data}}<br/>
+Data only admins can see: {{admin_data}}
 </div>

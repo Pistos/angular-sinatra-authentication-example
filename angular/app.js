@@ -2,7 +2,18 @@ angular.module('angularSinatra', ['ngRoute']);
 
 angular
 .module('angularSinatra')
-.controller('SplashController', function($scope) {
+.controller('SplashController', function($scope, apiService, authService) {
+  $scope.loggedIn = !! authService.username();
+
+  apiService.get('/data-only-users-can-see')
+  .success( function(data, status) {
+    $scope.user_data = data.data;
+  } );
+
+  apiService.get('/data-only-admins-can-see')
+  .success( function(data, status) {
+    $scope.admin_data = data.data;
+  } );
 });
 
 angular
@@ -15,7 +26,9 @@ angular
 
 angular
 .module('angularSinatra')
-.controller('AuthLogoutController', function($scope, authService) {
+.controller('AuthLogoutController', function($scope, $location, authService) {
+  authService.logOut();
+  $location.path('/').replace();
 });
 
 angular
@@ -44,9 +57,9 @@ angular
       });
     $routeProvider.when('/auth/logout',
       {
-        templateUrl: 'auth/logout.html',
+        template: '',
         controller: 'AuthLogoutController',
-        access_required: 1
+        access_required: 1,
       });
     $routeProvider.when('/home',
       {
@@ -59,7 +72,9 @@ angular
 angular
 .module('angularSinatra')
 .factory('apiService', function($http) {
-  var API_LOCATION = 'http://asae.localhost/api'; /* without trailing slash */
+  /* without trailing slash */
+  /* var API_LOCATION = 'http://yourdomain.com/api'; */
+  var API_LOCATION = '/api';
 
   return {
     token: function() {
@@ -67,6 +82,9 @@ angular
     },
     get: function(location, config) {
       return $http.get(API_LOCATION + location + '?token='+localStorage.getItem('api-token'), config);
+    },
+    delete: function(location, config) {
+      return $http.delete(API_LOCATION + location + '?token='+localStorage.getItem('api-token'), config);
     },
     post: function(location, data, config) {
       var data_copy = {};
@@ -112,6 +130,11 @@ angular
     },
     username: function() {
       return localStorage.getItem('username');
+    },
+    logOut: function() {
+      apiService.delete('/tokens');
+      localStorage.removeItem('username');
+      localStorage.removeItem('access');
     }
   };
 });

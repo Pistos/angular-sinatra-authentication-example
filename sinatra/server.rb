@@ -15,10 +15,10 @@ before do
   end
 end
 
-set(:auth) do |_|
+set(:auth) do |access_level_required|
   condition {
     @user = AngularSinatra::Model::User[token: @params['token'].to_s]
-    @user or halt(403)
+    ( @user && @user.access >= access_level_required ) or halt(403)
   }
 end
 
@@ -26,7 +26,7 @@ get '/auth-not-required', provides: 'json' do
   { 'some-key' => 'some-value' }.to_json
 end
 
-get '/auth-required', provides: 'json', :auth => true do
+get '/auth-required', provides: 'json', :auth => 1 do
   { 'some-private-key' => 'some-private-value' }.to_json
 end
 
@@ -67,3 +67,16 @@ get '/user', provides: 'json' do
     'access' => user.access,
   }.to_json
 end
+
+get '/data-only-users-can-see', provides: 'json', auth: 1 do
+  {
+    'data' => 'must have at least access level 1 to see this',
+  }.to_json
+end
+
+get '/data-only-admins-can-see', provides: 'json', auth: 5 do
+  {
+    'data' => 'must have at least access level 5 to see this',
+  }.to_json
+end
+

@@ -11,5 +11,9 @@ gem 'rspec'
 gem 'rack-test'
 gem 'factory_girl'
 
+# Optional: Choose one:
+# gem 'thin'
+# gem 'unicorn'
+
 # For debugging
 gem 'byebug'
