@@ -2,4 +2,9 @@ body {
   background-color: #eeeeee;
   color: #111111;
   font-family: "Sans Serif";
+  padding: 2em;
+}
+
+div + div {
+  margin-top: 1em;
 }
