@@ -1,0 +1,18 @@
+<VirtualHost *:80>
+    DocumentRoot "/path/to/angular-sinatra-authentication-example/angular"
+    ServerName yourdomain.com
+    ServerAlias yourdomain.com
+    ErrorLog /var/log/apache2/yourdomain.com.errors
+    CustomLog /var/log/apache2/yourdomain.com.log combined
+
+    ProxyPreserveHost On
+    ProxyPass /api/ http://localhost:3000/
+    ProxyPassReverse /api/ http://localhost:3000/
+
+    <Directory "/path/to/angular-sinatra-authentication-example/angular">
+        Options FollowSymLinks -ExecCGI
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
