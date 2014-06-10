@@ -17,6 +17,8 @@ Create and migrate the database.  For PostgreSQL:
     % createuser -U postgres angular_sinatra
     % createdb -U postgres -O angular_sinatra angular_sinatra
     % bundle exec sequel -m migrations postgres://angular_sinatra@localhost/angular_sinatra
+    % cp database.yaml.example database.yaml
+    % ${EDITOR} database.yaml  # modify as desired
 
 Then start the Sinatra server with:
 

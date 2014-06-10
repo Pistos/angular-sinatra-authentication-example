@@ -6,7 +6,7 @@ http {
         root /path/to/angular-sinatra-authentication-example/angular;
 
         location /api/ {
-            proxy_pass        http://yourdomain.com:3000/;
+            proxy_pass        http://localhost:3000/;
             proxy_set_header  X-Real-IP  $remote_addr;
             # Set Referer and Host to prevent CSRF panick by Sinatra
             proxy_set_header Referer yourhost;
