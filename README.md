@@ -8,6 +8,17 @@ the frontend and Sinatra as the API/backend.
 
 See this code in action at: http://asae.pist0s.ca/
 
+**Important Note**: It is crucial to understand that, with the way this code
+is designed, no true authorization is being enforced at the frontend level
+(AngularJS, browser side)!  Do *not* rely on the frontend alone to protect
+sensitive data in your application.  Anything that must be protected or hidden
+must be fully controlled and dispensed by the backend (API).  Observe that
+access levels are set both in the frontend and the backend.
+
+Each user has a numeric access level.  The higher the number, the more access
+they have.  Assign access levels to pages and to API endpoints to restrict
+access.
+
 ## Installation
 
     % cd sinatra
@@ -29,7 +40,3 @@ Then start the Sinatra server with:
 Refer to the nginx or Apache example configurations for suggestions on how to
 map the /api route to the Sinatra application, and how to serve the Angular
 index file.
-
-Each user has a numeric access level.  The higher the number, the more access
-they have.  Assign access levels to pages and to API endpoints to restrict
-access.
