@@ -163,6 +163,7 @@ angular
       apiService.delete('/tokens');
       localStorage.removeItem('username');
       localStorage.removeItem('access');
+      localStorage.removeItem('api-token');
     }
   };
 });

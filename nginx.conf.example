@@ -8,7 +8,7 @@ http {
         location /api/ {
             proxy_pass        http://localhost:3000/;
             proxy_set_header  X-Real-IP  $remote_addr;
-            # Set Referer and Host to prevent CSRF panick by Sinatra
+            # Set Referer and Host to prevent Sinatra from complaining about CSRF
             proxy_set_header Referer yourhost;
             proxy_set_header Host yourdomain.com;
         }
