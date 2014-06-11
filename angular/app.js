@@ -96,25 +96,27 @@ angular
   /* var API_LOCATION = 'http://yourdomain.com/api'; */
   var API_LOCATION = '/api';
 
-  return {
+  var apiService = {
     token: function() {
       return localStorage.getItem('api-token');
-    },
-    get: function(location, config) {
-      return $http.get(API_LOCATION + location + '?token='+localStorage.getItem('api-token'), config);
-    },
-    delete: function(location, config) {
-      return $http.delete(API_LOCATION + location + '?token='+localStorage.getItem('api-token'), config);
-    },
-    post: function(location, data, config) {
-      var dataCopy = {};
-      for( var key in data ) {
-        dataCopy[key] = data[key];
-      }
-      dataCopy.token = localStorage.getItem('api-token');
-      return $http.post(API_LOCATION + location, dataCopy, config);
     }
   };
+  apiService.get = function(location, config) {
+    return $http.get(API_LOCATION + location + '?token='+apiService.token(), config);
+  };
+  apiService.delete = function(location, config) {
+    return $http.delete(API_LOCATION + location + '?token='+apiService.token(), config);
+  };
+  apiService.post = function(location, data, config) {
+    var dataCopy = {};
+    for( var key in data ) {
+      dataCopy[key] = data[key];
+    }
+    dataCopy.token = apiService.token();
+    return $http.post(API_LOCATION + location, dataCopy, config);
+  };
+
+  return apiService;
 });
 
 angular
