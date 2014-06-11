@@ -139,7 +139,7 @@ angular
         .success( function(data, status, headers, config) {
           localStorage.setItem('username', data.username);
           localStorage.setItem('access', data.access);
-          $location.path('/home').replace();
+          $location.path(localStorage.getItem('post-login-path') || '/home').replace();
         });
       })
       .error( function(data, status) {
@@ -171,6 +171,7 @@ angular.module('angularSinatra')
         alert('Not authorized.');
         $location.path(last.$$route.originalPath).replace();
       } else {
+        localStorage.setItem('post-login-path', current.$$route.originalPath);
         $location.path('/auth/login').replace();
       }
     }
