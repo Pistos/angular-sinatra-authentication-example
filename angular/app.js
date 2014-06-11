@@ -7,12 +7,12 @@ angular
 
   apiService.get('/data-only-users-can-see')
   .success( function(data, status) {
-    $scope.user_data = data.data;
+    $scope.userData = data.data;
   } );
 
   apiService.get('/data-only-admins-can-see')
   .success( function(data, status) {
-    $scope.admin_data = data.data;
+    $scope.adminData = data.data;
   } );
 });
 
@@ -61,31 +61,31 @@ angular
       {
         templateUrl: 'splash/index.html',
         controller: 'SplashController',
-        access_required: null
+        accessRequired: null
       });
     $routeProvider.when('/auth/login',
       {
         templateUrl: 'auth/login.html',
         controller: 'AuthLoginController',
-        access_required: null
+        accessRequired: null
       });
     $routeProvider.when('/auth/logout',
       {
         template: '',
         controller: 'AuthLogoutController',
-        access_required: 1,
+        accessRequired: 1,
       });
     $routeProvider.when('/home',
       {
         templateUrl: 'home/index.html',
         controller: 'HomeController',
-        access_required: 1
+        accessRequired: 1
       });
     $routeProvider.when('/admin',
       {
         templateUrl: 'admin/index.html',
         controller: 'AdminController',
-        access_required: 9
+        accessRequired: 9
       });
   }]);
 
@@ -107,12 +107,12 @@ angular
       return $http.delete(API_LOCATION + location + '?token='+localStorage.getItem('api-token'), config);
     },
     post: function(location, data, config) {
-      var data_copy = {};
+      var dataCopy = {};
       for( var key in data ) {
-        data_copy[key] = data[key];
+        dataCopy[key] = data[key];
       }
-      data_copy.token = localStorage.getItem('api-token');
-      return $http.post(API_LOCATION + location, data_copy, config);
+      dataCopy.token = localStorage.getItem('api-token');
+      return $http.post(API_LOCATION + location, dataCopy, config);
     }
   };
 });
@@ -121,13 +121,13 @@ angular
 .module('angularSinatra')
 .factory('authService', function($window, $location, apiService) {
   return {
-    routeIsAccessible: function(access_required) {
-      if( access_required === undefined || access_required == null || access_required == 0 ) {
+    routeIsAccessible: function(accessRequired) {
+      if( accessRequired === undefined || accessRequired == null || accessRequired == 0 ) {
         return true;
       } else {
         return(
           localStorage.getItem('access') !== undefined &&
-          localStorage.getItem('access') >= access_required
+          localStorage.getItem('access') >= accessRequired
         );
       }
     },
@@ -164,7 +164,7 @@ angular.module('angularSinatra')
 .run(['$rootScope', '$location', 'authService', function ($rootScope, $location, authService) {
 
   $rootScope.$on("$routeChangeSuccess", function (event, current, last) {
-    if( authService.routeIsAccessible(current.$$route.access_required) ) {
+    if( authService.routeIsAccessible(current.$$route.accessRequired) ) {
       $location.path(current.$$route.originalPath).replace();
     } else {
       if( authService.loggedIn() ) {
