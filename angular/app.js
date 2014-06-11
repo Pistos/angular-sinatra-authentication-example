@@ -139,10 +139,8 @@ angular
         .success( function(data, status, headers, config) {
           localStorage.setItem('username', data.username);
           localStorage.setItem('access', data.access);
+          $location.path('/home').replace();
         });
-        /* localStorage.setItem('username', username); */
-        /* localStorage.setItem('access', data.access); */
-        $location.path('/home').replace();
       })
       .error( function(data, status) {
         alert('error: ' + status);
@@ -167,13 +165,13 @@ angular.module('angularSinatra')
 
   $rootScope.$on("$routeChangeSuccess", function (event, current, last) {
     if( authService.routeIsAccessible(current.$$route.access_required) ) {
-      $location.path(current.$$route.originalPath);
+      $location.path(current.$$route.originalPath).replace();
     } else {
       if( authService.loggedIn() ) {
         alert('Not authorized.');
-        $location.path(last.$$route.originalPath);
+        $location.path(last.$$route.originalPath).replace();
       } else {
-        $location.path('/auth/login');
+        $location.path('/auth/login').replace();
       }
     }
   });
