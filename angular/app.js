@@ -18,10 +18,15 @@ angular
 
 angular
 .module('angularSinatra')
-.controller('AuthLoginController', function($scope, authService) {
+.controller('AuthLoginController', function($scope, $rootElement, authService) {
   $scope.authenticate = function() {
     authService.checkCredentials($scope.username, $scope.password);
-  }
+  };
+
+  /* Handle browser autofill of login form */
+  window.setTimeout( function() {
+    $rootElement.find('input').checkAndTriggerAutoFillEvent();
+  }, 200);
 });
 
 angular
